@@ -1,10 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from openai import OpenAI
-
-client = OpenAI(api_key='sk-proj-6Y9zHzE4MFOCGtVlSL16T3BlbkFJBRxAw6RoKjBZKxDR8XKF') 
 from config import app, db
 from models import MenuItem
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+# Load .env file
+
+api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=api_key) # create an OpenAI client with the API key from the .env file
+
 
 
 
@@ -27,9 +34,9 @@ def ask_question(): # this function will be called when a POST request is made t
 
     prompt = f"Here is the menu for a restaurant with items followed by their descriptions:\n{menu_context}\n\nQuestion: {question}"
     print(prompt)
-    response = client.chat.completions.create(model="gpt-3.5-turbo",
+    response = client.chat.completions.create(model="gpt-4",
     messages=[
-        {"role": "system", "content": "You are a helpful chat assistant."},
+        {"role": "system", "content": "You are a knowledgable and careful restaurant waiter."},
         {"role": "user", "content": prompt}
     ])
     
